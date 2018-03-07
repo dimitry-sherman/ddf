@@ -52,7 +52,7 @@ class OperationsMetacardSupportSpec extends Specification {
         frameworkProperties.with {
             mimeTypeMapper = this.mimeTypeMapper
             defaultAttributeValueRegistry = this.defaultAttributeValueRegistry
-            transform = this.transfor
+            transform = this.transform
         }
 
         opsMetacard = new OperationsMetacardSupport(frameworkProperties)

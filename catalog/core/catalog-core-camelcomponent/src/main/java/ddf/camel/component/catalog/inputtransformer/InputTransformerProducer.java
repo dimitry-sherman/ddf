@@ -110,10 +110,7 @@ public class InputTransformerProducer extends TransformerProducer {
 
     Optional<Metacard> optionalMetacard = transformResponse.getParentMetacard();
 
-    if (!optionalMetacard.isPresent()) {
-      throw new MetacardCreationException("Could not create metacard with mimeType " + mimeType);
-    }
-
-    return optionalMetacard.get();
+    return optionalMetacard.orElseThrow(
+        () -> new MetacardCreationException("Could not create metacard with mimeType " + mimeType));
   }
 }

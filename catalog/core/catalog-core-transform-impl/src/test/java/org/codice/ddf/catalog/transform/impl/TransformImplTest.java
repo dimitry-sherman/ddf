@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -49,11 +50,13 @@ import org.codice.ddf.catalog.transform.MultiMetacardTransformer;
 import org.codice.ddf.catalog.transform.Transform;
 import org.codice.ddf.catalog.transform.TransformResponse;
 import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatcher;
 
 @SuppressWarnings("unchecked")
 public class TransformImplTest {
@@ -109,7 +112,8 @@ public class TransformImplTest {
     when(transformer.transform(any(SourceResponse.class), any(Map.class)))
         .thenReturn(mockBinaryContent);
 
-    when(transformerLocator.findQueryResponseTransformers(any(MimeType.class)))
+    when(transformerLocator.findQueryResponseTransformers(
+            argThat(isMimeType(new MimeType("text/xml")))))
         .thenReturn(Collections.singletonList(transformer));
 
     BinaryContent binaryContent =
@@ -120,13 +124,9 @@ public class TransformImplTest {
   }
 
   @Test
-  public void testIsMetacardTransformerIdValidBadId() throws CatalogTransformerException {
-
-    BinaryContent binaryContent = mock(BinaryContent.class);
+  public void testIsMetacardTransformerIdValidBadId() {
 
     MultiMetacardTransformer transformer = mock(MultiMetacardTransformer.class);
-    when(transformer.transform(any(List.class), any(Map.class)))
-        .thenReturn(Collections.singletonList(binaryContent));
 
     when(transformerLocator.findMultiMetacardTransformers(eq("xyz")))
         .thenReturn(Collections.singletonList(transformer));
@@ -195,7 +195,8 @@ public class TransformImplTest {
     when(transformer.transform(any(InputStream.class), any(Map.class)))
         .thenReturn(transformResponse);
 
-    when(transformerLocator.findMultiInputTransformers(any(MimeType.class)))
+    when(transformerLocator.findMultiInputTransformers(
+            argThat(isMimeType(new MimeType("text/xml")))))
         .thenReturn(Collections.singletonList(transformer));
 
     TransformResponse transformResponseActual =
@@ -331,7 +332,8 @@ public class TransformImplTest {
     when(transformer.transform(any(List.class), any(Map.class)))
         .thenReturn(Collections.singletonList(binaryContent));
 
-    when(transformerLocator.findMultiMetacardTransformers(any(MimeType.class)))
+    when(transformerLocator.findMultiMetacardTransformers(
+            argThat(isMimeType(new MimeType("text/xml")))))
         .thenReturn(Collections.singletonList(transformer));
 
     List<BinaryContent> binaryContents =
@@ -481,6 +483,10 @@ public class TransformImplTest {
     assertThat(binaryContents.get(0), is(binaryContent));
   }
 
+  /**
+   * Test the case where the transform is called using only the transformer id and no binary
+   * contents are returned.
+   */
   @Test(expected = CatalogTransformerException.class)
   public void testTransformMetacardsByTransformerIdOnlyEmptyBinaryContents()
       throws CatalogTransformerException, MimeTypeParseException {
@@ -493,5 +499,14 @@ public class TransformImplTest {
         .thenReturn(Collections.singletonList(transformer));
 
     transform.transform(Collections.singletonList(metacard), "xyz", Collections.emptyMap());
+  }
+
+  private Matcher<MimeType> isMimeType(MimeType expected) {
+    return new ArgumentMatcher<MimeType>() {
+      @Override
+      public boolean matches(Object item) {
+        return item instanceof MimeType && ((MimeType) item).match(expected);
+      }
+    };
   }
 }

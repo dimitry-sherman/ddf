@@ -118,7 +118,7 @@ public interface Transform {
       throws CatalogTransformerException;
 
   /**
-   * Determine of a transformer ID matches an existing transformer.
+   * Determine if a transformer ID matches an existing transformer.
    *
    * @param transformerId the transformer ID
    * @return {@code true} if a transformer was found with the transformer ID, otherwise {@code
@@ -127,9 +127,11 @@ public interface Transform {
   boolean isMetacardTransformerIdValid(String transformerId);
 
   /**
+   * Transform a {@link SourceResponse} to a {@link BinaryContent}.
+   *
    * @param response the source response to be transformed
    * @param transformerId the id of the transformer to be used
-   * @param transformerArguments arguments to passed to the transformer
+   * @param transformerArguments arguments to be passed to the transformer
    * @return the binary content
    * @throws CatalogTransformerException if the source response cannot be transformed
    * @throws IllegalArgumentException if the transformerId cannot be found or if the source response
@@ -140,9 +142,11 @@ public interface Transform {
       throws CatalogTransformerException;
 
   /**
+   * Transform a {@link SourceResponse} to a {@link BinaryContent}.
+   *
    * @param response the source response to be transformed
    * @param mimeType the requested mime-type of the binary content
-   * @param transformerArguments arguments to passed to the transformer
+   * @param transformerArguments arguments to be passed to the transformer
    * @return an optional binary content
    * @throws CatalogTransformerException if the source response cannot be transformed
    * @throws IllegalArgumentException if the source response is null or if a transformer cannot be
