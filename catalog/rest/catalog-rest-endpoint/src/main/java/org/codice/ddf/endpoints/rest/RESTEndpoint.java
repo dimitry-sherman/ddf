@@ -77,7 +77,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -848,10 +847,6 @@ public class RESTEndpoint implements RESTService {
               getTransform()
                   .transform(
                       mimeType, null, null, message, transformerParam, Collections.emptyMap());
-
-          List<Metacard> metacardsToCreate =
-              new LinkedList<>(transformResponse.getDerivedMetacards());
-          transformResponse.getParentMetacard().ifPresent(metacardsToCreate::add);
 
           if (transformResponse.getParentMetacard().isPresent()) {
             CreateRequest createRequest =
