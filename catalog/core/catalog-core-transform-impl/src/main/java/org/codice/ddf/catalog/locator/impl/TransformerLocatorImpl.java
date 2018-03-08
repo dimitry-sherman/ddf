@@ -115,18 +115,7 @@ public class TransformerLocatorImpl implements TransformerLocator {
 
   @SuppressWarnings("deprecation")
   private String generateOsgiFilter(String transformerId) {
-    return "(|"
-        + "("
-        + Constants.SERVICE_SHORTNAME
-        + "="
-        + transformerId
-        + ")"
-        + "("
-        + Constants.SERVICE_ID
-        + "="
-        + transformerId
-        + ")"
-        + ")";
+    return String.format("(|(%s=%s)(%s=%s))", Constants.SERVICE_SHORTNAME, transformerId, Constants.SERVICE_ID, transformerId);
   }
 
   private List<QueryResponseTransformer> findQueryResponseTransformers(
