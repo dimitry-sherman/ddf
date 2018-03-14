@@ -302,3 +302,4 @@ public class CatalogComponentTest extends CamelTestSupport {
     return "<xml></xml>";
   }
 }
+
